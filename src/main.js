@@ -1,6 +1,8 @@
 import { createApp } from 'vue';
 import firebase from 'firebase/app';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 import App from './App.vue';
 import router from './router';
 
@@ -15,4 +17,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-createApp(App).use(router).mount('#app');
+const app = createApp(App);
+app.use(VueSweetalert2);
+app.use(router);
+app.mount('#app');
