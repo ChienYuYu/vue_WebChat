@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: '1:252502221711:web:f1cef5a59ad393877761fa',
 };
 firebase.initializeApp(firebaseConfig);
-
 const app = createApp(App);
 app.use(VueSweetalert2);
 app.use(router);

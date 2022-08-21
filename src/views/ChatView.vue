@@ -9,20 +9,36 @@
   <div class="wrapper d-flex justify-content-center">
     <div class="container">
       <div class="row justify-content-center">
-        <div class="chat-area col-12 col-md-10 col-xl-4">
-          <ul class="msg-list list-unstyled pt-4 pb-5 py-md-4 py-lg-3">
+        <div class="chat-area col-12 col-md-10 col-xl-4" ref="chatArea">
+          <!-- <ul class="msg-list list-unstyled pt-4 pb-5 py-md-4 py-lg-3">
             <li class="msg mb-3">
               <span class="nickname mb-1 text-nowrap w-100 d-block text-start pt-1"
                 >台南基努李維</span
               >
               <p class="p-2">hello 你好</p>
             </li>
-
             <li class="my-msg mb-3">
               <span class="nickname mb-1 text-nowrap w-100 d-block text-end pt-1">新北金城武</span>
               <p class="p-2">我就是帥</p>
             </li>
-          </ul>
+          </ul> -->
+          <div class="pb-5 pt-4 py-md-0">
+            <ul class="msg-list list-unstyled py-md-4 py-lg-3"
+                v-for="item in allMessages" :key="item">
+              <li class="msg mb-3" v-if="item.uid !== uid">
+                <span class="nickname mb-1 text-nowrap w-100 d-block text-start pt-1">
+                  {{ item.nickname }}
+                </span>
+                <p class="p-2">{{ item.userMessage }}</p>
+              </li>
+              <li class="my-msg mb-3" v-else>
+                <span class="nickname mb-1 text-nowrap w-100 d-block text-end pt-1">
+                  {{ item.nickname }}
+                </span>
+                <p class="p-2">{{ item.userMessage }}</p>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -33,8 +49,10 @@
           class="text-input form-control border-0 rounded-0"
           placeholder="輸入訊息..."
           aria-label="text"
+          v-model="myMessage"
+          @keyup.enter="sendMessage"
         />
-        <button class="submit-btn btn py-2 rounded-0" type="button">
+        <button class="submit-btn btn py-2 rounded-0" type="button" @click="sendMessage">
           <i class="bi bi-send-fill p-2"></i>
         </button>
       </div>
@@ -45,26 +63,48 @@
 <script>
 import firebase from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/database';
 
 export default {
   data() {
     return {
       uid: '',
       nickname: '',
+      allMessages: '',
       time: '',
+      myMessage: '',
+      sendTime: '',
     };
   },
   methods: {
     getUserData() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          console.log(user);
           this.uid = user.uid;
           this.nickname = user.displayName;
         } else {
           this.$router.push('/');
         }
       });
+    },
+    getMessage() {},
+    sendMessage() {
+      this.getTime();
+      const msgData = firebase.database().ref('messages');
+      msgData.push({
+        uid: this.uid,
+        nickname: this.nickname,
+        userMessage: this.myMessage,
+        sendTime: this.sendTime,
+      });
+      this.myMessage = '';
+    },
+    getTime() {
+      const date = new Date();
+      this.sendTime = `${date.getHours()}:${date.getMinutes()}`;
+    },
+    awaysBottom() {
+      this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight;
     },
     logout() {
       firebase
@@ -81,6 +121,13 @@ export default {
   },
   created() {
     this.getUserData();
+  },
+  mounted() {
+    firebase.database().ref('messages').on('value', (snapshot) => {
+      this.allMessages = snapshot.val();
+      console.log(this.allMessages);
+      this.awaysBottom();
+    });
   },
 };
 </script>
@@ -120,11 +167,13 @@ export default {
   height: 85vh;
   border-radius: 20px;
   background: linear-gradient(55deg, rgb(67, 247, 226), rgb(90, 28, 213));
+  background-attachment: fixed;
   border: 5px solid rgb(151, 231, 255);
   overflow: auto;
   margin-top: 60px;
   @media (max-width: 900px) {
-    margin-top: 80px;
+    height: 75vh;
+    margin-top: 120px;
     overflow: auto;
   }
   @media (max-width: 430px) {
