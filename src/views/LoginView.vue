@@ -38,6 +38,38 @@
   </div>
 </template>
 
+<script>
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    login() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then(() => {
+          this.$router.push('/chat');
+        })
+        .catch((error) => {
+          console.log(error.code, error.message);
+          this.$swal({
+            title: '錯誤?',
+            text: '請確認帳號密碼是否輸入正確',
+            icon: 'error',
+          });
+        });
+    },
+  },
+};
+</script>
+
 <style lang="scss" scoped>
 .wrapper {
   background: linear-gradient(55deg, rgb(67, 247, 226), rgb(90, 28, 213));

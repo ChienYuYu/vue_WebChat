@@ -4,7 +4,7 @@
       <h1 class="web-name mb-0 mx-2 text-center">yoyoChat</h1>
       <i class="bi bi-chat-dots"></i>
     </div>
-    <button type="button" class="btn btn-sm logout-btn">登出</button>
+    <button type="button" class="btn btn-sm logout-btn" @click="logout">登出</button>
   </header>
   <div class="wrapper d-flex justify-content-center">
     <div class="container">
@@ -41,6 +41,49 @@
     </div>
   </div>
 </template>
+
+<script>
+import firebase from 'firebase/app';
+import 'firebase/auth';
+
+export default {
+  data() {
+    return {
+      uid: '',
+      nickname: '',
+      time: '',
+    };
+  },
+  methods: {
+    getUserData() {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          console.log(user);
+          this.uid = user.uid;
+          this.nickname = user.displayName;
+        } else {
+          this.$router.push('/');
+        }
+      });
+    },
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$swal('登出成功');
+        })
+        .catch(() => {
+          this.$swal('似乎有些問題 請稍後再嘗試');
+        });
+      this.$router.push('/');
+    },
+  },
+  created() {
+    this.getUserData();
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 ::-webkit-scrollbar {

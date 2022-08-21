@@ -51,7 +51,8 @@
               v-model="nickname"
           /></label>
         </div>
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-between">
+          <router-link to="/" class="link-light">返回登入頁</router-link>
           <button type="submit" class="btn login-btn btn-outline-light">註冊</button>
         </div>
       </form>
