@@ -71,7 +71,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::-webkit-scrollbar {
+  display: none;
+}
 .wrapper {
+  width: 100%;
+  overflow: auto;
+  position: fixed;
   background: linear-gradient(55deg, rgb(67, 247, 226), rgb(90, 28, 213));
 }
 .web-name {

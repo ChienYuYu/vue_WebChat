@@ -72,7 +72,6 @@ export default {
         }
       });
     },
-    getMessage() {},
     sendMessage() {
       this.getTime();
       const msgData = firebase.database().ref('messages');
@@ -91,9 +90,8 @@ export default {
       this.time = `${date.getHours()}:${date.getMinutes()}`;
     },
     awaysBottom() {
-      // this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight;
-      const elhight = this.$refs.chatArea;
-      elhight.scrollTop = elhight.scrollHeight;
+      const getHeight = this.$refs.chatArea.scrollHeight;
+      this.$refs.chatArea.scrollTop = getHeight;
     },
     logout() {
       firebase
@@ -172,7 +170,7 @@ export default {
       p {
         background: #333;
         color: #fff;
-        border-radius: 3px;
+        border-radius: 5px;
         display: inline-block;
         margin-bottom: 0;
       }
@@ -185,7 +183,7 @@ export default {
         text-align: start;
         display: inline-block;
         background: #fff;
-        border-radius: 3px;
+        border-radius: 5px;
         margin-bottom: 0;
       }
     }

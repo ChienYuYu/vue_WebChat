@@ -1,6 +1,7 @@
 <template>
   <div class="wrapper">
-    <div class="container d-flex flex-column justify-content-start align-items-center pt-5 vh-100">
+    <div class="container d-flex flex-column justify-content-start align-items-center
+    pt-5 pt-md-3 vh-100">
       <div><i class="bi bi-chat-dots"></i></div>
       <h1 class="web-name mb-0 mx-2 text-center">yoyoChat</h1>
       <form class="p-3 userInfo col-10 col-md-6 col-lg-4" @submit.prevent="formCheck">
@@ -115,7 +116,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::-webkit-scrollbar {
+  display: none;
+}
 .wrapper {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: auto;
   background: linear-gradient(55deg, rgb(67, 247, 226), rgb(90, 28, 213));
 }
 .web-name {
