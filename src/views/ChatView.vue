@@ -8,12 +8,18 @@
           <li class="message" v-if="item.uid !== uid">
             <span class="nickname">{{ item.nickname }}</span>
             <p class="p-1">{{ item.userMessage }}</p>
+            <span class="time">
+              {{ item.time }}
+            </span>
           </li>
           <li class="my-message" v-else>
             <span class="nickname">{{ item.nickname }}</span>
             <p class="p-1">
               {{ item.userMessage }}
             </p>
+            <span class="time">
+              {{ item.time }}
+            </span>
           </li>
         </ul>
       </div>
@@ -50,9 +56,9 @@ export default {
       uid: '',
       nickname: '',
       allMessages: '',
+      date: '',
       time: '',
       myMessage: '',
-      sendTime: '',
     };
   },
   methods: {
@@ -74,13 +80,15 @@ export default {
         uid: this.uid,
         nickname: this.nickname,
         userMessage: this.myMessage,
-        sendTime: this.sendTime,
+        date: this.date,
+        time: this.time,
       });
       this.myMessage = '';
     },
     getTime() {
       const date = new Date();
-      this.sendTime = `${date.getHours()}:${date.getMinutes()}`;
+      this.date = `${date.getMonth() + 1}/${date.getDate()}`;
+      this.time = `${date.getHours()}:${date.getMinutes()}`;
     },
     awaysBottom() {
       // this.$refs.chatArea.scrollTop = this.$refs.chatArea.scrollHeight;
@@ -145,7 +153,7 @@ export default {
   }
   .chat-area {
     // border: 1px solid #333;
-    padding-bottom: 90px; // 防吃字
+    padding-bottom: 100px; // 防吃字
     width: 100%;
     height: 100%;
     overflow: scroll;
@@ -164,8 +172,9 @@ export default {
       p {
         background: #333;
         color: #fff;
-        border-radius: 5px;
+        border-radius: 3px;
         display: inline-block;
+        margin-bottom: 0;
       }
     }
     .my-message {
@@ -176,8 +185,14 @@ export default {
         text-align: start;
         display: inline-block;
         background: #fff;
-        border-radius: 10px;
+        border-radius: 3px;
+        margin-bottom: 0;
       }
+    }
+    .time{
+      color: #eee;
+      display: block;
+      font-size: 14px;
     }
   }
 }
