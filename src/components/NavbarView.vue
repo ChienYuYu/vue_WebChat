@@ -2,7 +2,7 @@
  <header class="header p-2">
     <div class="container d-flex justify-content-between">
       <div class="d-flex align-items-center">
-      <h1 class="web-name mb-0 text-center">yoyoChat</h1>
+      <h1 class="web-name mb-0 me-1 text-center">yoyoChat</h1>
       <i class="bi bi-chat-dots"></i>
     </div>
     <button type="button" class="btn btn-sm logout-btn" @click="logout">
