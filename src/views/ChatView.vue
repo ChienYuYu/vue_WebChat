@@ -4,22 +4,33 @@
   <div class="wrapper background">
     <div class="container chat-wrap">
       <div class="col-6 chat-area" ref="chatArea">
-        <ul class="list-unstyled" v-for="item in allMessages" :key="item">
-          <li class="message" v-if="item.uid !== uid">
+        <ul class="list-unstyled" v-for="(item, index) in allMessages" :key="index">
+          <li v-if="item.retract === true" class="retract-message">
+              <p class="p-1">
+              // {{item.nickname}} {{ item.userMessage }} //
+              </p>
+          </li>
+          <li class="message" v-else-if="item.uid !== uid">
             <span class="nickname">{{ item.nickname }}</span>
             <p class="p-1">{{ item.userMessage }}</p>
             <span class="time">
               {{ item.time }}
             </span>
           </li>
-          <li class="my-message" v-else>
+          <li class="my-message" v-else-if="item.uid == uid">
             <span class="nickname">{{ item.nickname }}</span>
             <p class="p-1">
               {{ item.userMessage }}
             </p>
-            <span class="time">
-              {{ item.time }}
-            </span>
+            <div>
+              <a href="#" class="retract-btn bi bi-arrow-up-right-square"
+              :data-key="index" @click.prevent="retractMsg">
+                收回 /
+              </a>
+              <span class="time">
+                {{ item.time }}
+              </span>
+            </div>
           </li>
         </ul>
       </div>
@@ -60,6 +71,8 @@ export default {
       date: '',
       time: '',
       myMessage: '',
+      datakey: '',
+      retractStatus: false,
     };
   },
   methods: {
@@ -82,13 +95,27 @@ export default {
         userMessage: this.myMessage,
         date: this.date,
         time: this.time,
+        retract: false,
       });
       this.myMessage = '';
     },
+    retractMsg(e) {
+      this.getTime();
+      this.datakey = e.target.dataset.key;
+      const msgData = firebase.database().ref('messages').child(this.datakey);
+      msgData.set({
+        uid: this.uid,
+        nickname: this.nickname,
+        userMessage: '已收回訊息',
+        date: this.date,
+        retract: true,
+      });
+      this.retractStatus = true;
+    },
     getTime() {
-      const date = new Date();
-      this.date = `${date.getMonth() + 1}/${date.getDate()}`;
-      this.time = `${date.getHours()}:${date.getMinutes()}`;
+      const nowTime = new Date();
+      this.date = `${nowTime.getTime()}`;
+      this.time = `${nowTime.getHours()}:${nowTime.getMinutes()}`;
     },
     awaysBottom() {
       nextTick(() => {
@@ -113,10 +140,13 @@ export default {
     this.getUserData();
   },
   mounted() {
-    firebase.database().ref('messages').on('value', (snapshot) => {
-      this.allMessages = snapshot.val();
-      this.awaysBottom();
-    });
+    firebase
+      .database()
+      .ref('messages')
+      .on('value', (snapshot) => {
+        this.allMessages = snapshot.val();
+        this.awaysBottom();
+      });
   },
 };
 </script>
@@ -127,7 +157,7 @@ export default {
 }
 
 .wrapper {
-  position:fixed;
+  position: fixed;
   width: 100%;
   height: 100%;
   background: #333;
@@ -167,6 +197,18 @@ export default {
       font-size: 14px;
       display: block;
     }
+    .retract-message{
+      width: 100%;
+      text-align: center;
+      p {
+        display: inline-block;
+        background: rgb(114, 187, 230);
+        color: #fff;
+        font-size: 13px;
+        border-radius: 5px;
+        margin-bottom: 0;
+      }
+    }
     .message {
       width: 70%;
       p {
@@ -190,10 +232,17 @@ export default {
         margin-bottom: 0;
         word-break: break-all;
       }
+      .retract-btn{
+        // display: block;
+        color: rgb(255, 228, 253);
+        border-radius: 10%;
+        font-size: 13px;
+        text-decoration: none;
+      }
     }
-    .time{
+    .time {
       color: #eee;
-      display: block;
+      // display: block;
       font-size: 14px;
     }
   }
