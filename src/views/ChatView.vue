@@ -47,6 +47,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import { nextTick } from 'vue';
 import Navbar from '../components/NavbarView.vue';
 
 export default {
@@ -90,8 +91,10 @@ export default {
       this.time = `${date.getHours()}:${date.getMinutes()}`;
     },
     awaysBottom() {
-      const getHeight = this.$refs.chatArea.scrollHeight;
-      this.$refs.chatArea.scrollTop = getHeight;
+      nextTick(() => {
+        const getHeight = this.$refs.chatArea.scrollHeight;
+        this.$refs.chatArea.scrollTop = getHeight;
+      });
     },
     logout() {
       firebase
@@ -112,7 +115,6 @@ export default {
   mounted() {
     firebase.database().ref('messages').on('value', (snapshot) => {
       this.allMessages = snapshot.val();
-      console.log(this.allMessages);
       this.awaysBottom();
     });
   },

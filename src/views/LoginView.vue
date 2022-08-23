@@ -58,10 +58,10 @@ export default {
           this.$router.push('/chat');
         })
         .catch((error) => {
-          console.log(error.code, error.message);
           this.$swal({
             title: '錯誤?',
-            text: '請確認帳號密碼是否輸入正確',
+            // text: '請確認帳號密碼是否輸入正確',
+            text: error.message,
             icon: 'error',
           });
         });
