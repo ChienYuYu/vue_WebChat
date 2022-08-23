@@ -175,6 +175,7 @@ export default {
         border-radius: 5px;
         display: inline-block;
         margin-bottom: 0;
+        word-break: break-all;
       }
     }
     .my-message {
@@ -187,6 +188,7 @@ export default {
         background: #fff;
         border-radius: 5px;
         margin-bottom: 0;
+        word-break: break-all;
       }
     }
     .time{
